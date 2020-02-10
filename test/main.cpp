@@ -4,6 +4,7 @@
 using namespace std;
 
 int main(){
-    cout << "hello World";
-    BTree tree();
+    btree tree(1,3);
+    tree.newValue(1);
+    cout << sizeof(tree.rootNode.children);
 }

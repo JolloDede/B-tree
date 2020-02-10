@@ -8,12 +8,16 @@
             "name": "(Windows) Starten",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}\\bin\\main.exe",
-            "args": [],
+            "program": "${workspaceFolder}\\bin\\program.exe",
+            "args": [".\\test\\main.cpp", ".\\src\\node.cpp", ".\\src\\btree.cpp"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "externalConsole": false
+            "externalConsole": false,
+            "windows": {
+                "MIMode": "gdb",
+                "miDebuggerPath": "C:\\mingw-w64\\mingw32\\bin\\gdb.exe"
+              }
         }
     ]
 }
