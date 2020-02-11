@@ -3,10 +3,12 @@
 
 struct node
 {
-    int left, right;
+    int *values;
+    int nV;
     node *parent;
-    node *children[];
+    node **children;
+    bool leaf;
 
-    node(int x);
+    node(int amountValues, int deg, bool leaf);
     node();
 };

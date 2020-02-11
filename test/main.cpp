@@ -4,7 +4,8 @@
 using namespace std;
 
 int main(){
-    btree tree(1,3);
-    tree.newValue(1);
-    cout << sizeof(tree.rootNode.children);
+    btree tree(2,3);
+    tree.newValue(4);
+    tree.newValue(7);
+    tree.printTree();
 }

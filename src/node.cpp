@@ -1,11 +1,10 @@
 #include "node.h"
 
-node::node(int x){
-    left = x;
-    right = 0;
-}
+node::node(int amountValues, int deg, bool leaf){
+    node::leaf = leaf;
 
-node::node(){
-    left = 0;
-    right = 0;
+    values = new int[amountValues];
+    children = new node *[deg];
+
+    nV = 0;
 }

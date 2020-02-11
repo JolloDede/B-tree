@@ -1,61 +1,42 @@
 #include "btree.h"
 
-btree::btree(int startValue, int numberOfChildren)
+btree::btree(int _amountValues, int _degree)
 {
-    rootNode.left = startValue;
-    initValue = true;
-    nCount = 1;
-    nodeList[nCount-1] = rootNode;
-    rootNode.children[numberOfChildren];
+    valueAmount = _amountValues;
+    degree = _degree;
+    rootNode = NULL;
 }
 
-void btree::newValue(int value)
+void btree::xorSwap(int *x, int *y)
 {
-    std::cout << "left: " << rootNode.left << std::endl
-              << "right: " << rootNode.right << std::endl;
-
-    if (initValue)
-    {
-        if (value == rootNode.left)
-        {
-           return;
-        }
-        if (value > rootNode.left)
-        {
-            rootNode.right = value;
-        }else{
-            rootNode.right = rootNode.left;
-            rootNode.left = value;
-        }
-        initValue = false;
-        return;
-    }
-    insert(value, &rootNode);
-}
-
-void btree::insert(int value, node *nodeNow)
-{    
-    if (value == nodeNow->left || value == nodeNow->right)
-    {
-        return;
-    }
-    if (value < nodeNow->left)
-    {
-        nCount++;
-        nodeList[nCount-1] = node(nodeNow->left);
-    }else
-    if (value > nodeNow->right)
-    {
-        nCount++;
-        nodeList[nCount-1] = node(nodeNow->right);
-    }
-    else
-    {
-        nCount++;
-        nodeList[nCount-1] = node(value);
+    if (x != y)
+    { //ensure that memory locations are different
+        *x ^= *y;
+        *y ^= *x;
+        *x ^= *y;
     }
 }
 
-void btree::placeValue(int value){
+void btree::newValue(int value){
+    if (rootNode == NULL)
+    {
+        nodeList.push_back(node(valueAmount,degree, true));
+        rootNode = &nodeList[0];
+        rootNode->values[0] = value;
+        rootNode->nV = 1;
+    } else{
+        
+    }
+}
 
+void btree::printTree(){
+    for (int i = 0; i < nodeList.size(); i++)
+    {
+       std::cout << "node { ";
+       for (int j = 0; j < valueAmount; j++)
+       {
+           std::cout << "[" <<nodeList[i].values[j] << "] ";
+       }
+       std::cout << "}" << std::endl;
+    }  
 }

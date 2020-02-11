@@ -1,16 +1,20 @@
 #include <iostream>
+#include <vector>
 #include "node.h"
 
 class btree
 {
-    bool initValue;
-    node nodeList[];
-    int nCount;
+    int valueAmount;
+    node *rootNode;
+    int degree;
 
-    public:
-        node rootNode;
-        btree(int startValue, int numberOfChildren);
-        void newValue(int value);
-        void insert(int value, node *nodeNow);
-        void placeValue(int value);
+public:
+    btree(int _numberOfChildren, int _deg);
+
+    void xorSwap(int *x, int *y);
+    void newValue(int value);
+    void printTree();
+
+private:
+    std::vector<node> nodeList;
 };
