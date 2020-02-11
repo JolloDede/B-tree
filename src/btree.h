@@ -13,6 +13,7 @@ public:
 
     void xorSwap(int *x, int *y);
     void newValue(int value);
+    void insert(int value);
     void printTree();
 
 private:

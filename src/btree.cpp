@@ -25,8 +25,12 @@ void btree::newValue(int value){
         rootNode->values[0] = value;
         rootNode->nV = 1;
     } else{
-        
+
     }
+}
+
+void btree::insert(int value){
+    
 }
 
 void btree::printTree(){
