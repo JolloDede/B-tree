@@ -5,13 +5,14 @@
     "tasks": [
         {
             "type": "shell",
-            "label": "g++.exe build active file",
+            "label": "g++.exe build and debug active file",
             "command": "C:\\mingw-w64\\mingw32\\bin\\g++.exe",
             "args": [
                 "-g",
-                "${file}",
+                "${workspaceFolder}\\test\\main.cpp",
+                "${workspaceFolder}\\src\\*.cpp",
                 "-o",
-                "${workspaceFolder}\\bin\\${fileBasenameNoExtension}.exe"
+                "${workspaceFolder}\\bin\\program.exe"
             ],
             "options": {
                 "cwd": "C:\\mingw-w64\\mingw32\\bin"

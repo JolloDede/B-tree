@@ -1,14 +1,16 @@
 #include <iostream>
 #include <stdlib.h>
 
-struct node
+struct Node
 {
     int *values;
     int nV;
-    node *parent;
-    node **children;
+    Node *parent;
+    Node **children;
     bool leaf;
 
-    node(int amountValues, int deg, bool leaf);
-    node();
+    Node(int amountValues, int deg, bool leaf);
+    void insertNonFull(int value);
+    void splitChild(int i, Node *node);
+    void printInOrder();
 };

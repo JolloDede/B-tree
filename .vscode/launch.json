@@ -5,6 +5,27 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "g++.exe build and debug active file",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}\\bin\\program.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false, //set to true to see output in cmd instead
+            "MIMode": "gdb",
+            "miDebuggerPath": "C:\\mingw-w64\\mingw32\\bin\\gdb.exe",
+            "setupCommands": [
+            {
+            "description": "Enable pretty-printing for gdb",
+            "text": "-enable-pretty-printing",
+            "ignoreFailures": true
+            }
+            ],
+            "preLaunchTask": "g++.exe build and debug active file"
+        },
+        {
             "name": "(Windows) Starten",
             "type": "cppvsdbg",
             "request": "launch",
@@ -18,6 +39,7 @@
                 "MIMode": "gdb",
                 "miDebuggerPath": "C:\\mingw-w64\\mingw32\\bin\\gdb.exe"
               }
+            //   "logging": { "engineLogging": true, "trace": true, "traceResponse": true }
         }
     ]
 }
