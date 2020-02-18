@@ -1,10 +1,10 @@
 #include "btree.h"
 
-BTree::BTree(int _amountValues, int _degree)
+// Constructor Init a enmpty tree
+BTree::BTree(int _degree)
 {
-    amountOfValues = _amountValues;
-    degree = _degree;
-    rootNode = NULL;
+    degree = _degree; // How many Children a Node can have
+    rootNode = NULL; // rootNode gets set to NULL
 }
 
 // void BTree::xorSwap(int *x, int *y)
@@ -17,19 +17,10 @@ BTree::BTree(int _amountValues, int _degree)
 //     }
 // }
 
-void BTree::child(Node *node, int value)
-{
-    if (node->leaf)
-    {
-        if (node->nV == amountOfValues)
-        {
-
-        }
-    }
-}
-
+// main function that insert a new Value in the tree
 void BTree::newValue(int value)
 {
+    // If tree is empty
     if (rootNode == NULL)
     {
         rootNode = new Node(degree, true);
@@ -38,6 +29,7 @@ void BTree::newValue(int value)
     }
     else
     {
+        // If rootNode is full
         if (rootNode->nV == 2*rootNode->deg-1)
         {
             Node *newRootNode = new Node(rootNode->deg, false);
@@ -46,6 +38,7 @@ void BTree::newValue(int value)
 
             newRootNode->splitChild(0, rootNode);
 
+            // Decide wich node becomes the new Key
             int i = 0;
             if (newRootNode->values[0] < value)
             {
@@ -62,6 +55,7 @@ void BTree::newValue(int value)
     }
 }
 
+// Main function Where the tree gets printed to the commandline
 void BTree::printTree()
 {
     rootNode->printInOrder();

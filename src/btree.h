@@ -4,16 +4,14 @@
 
 class BTree
 {
-    int amountOfValues;
     Node *rootNode;
     int degree;
 
 public:
-    BTree(int _numberOfChildren, int _deg);
+    BTree(int _deg);
 
     // void xorSwap(int *x, int *y);
     void newValue(int value);
     void printTree();
     void recTree(Node *node);
-    void child(Node *node, int value);
 };
