@@ -9,7 +9,9 @@ struct Node
     Node **children;
     bool leaf;
 
-    Node(int amountValues, int deg, bool leaf);
+    int deg;
+
+    Node(int deg, bool leaf);
     void insertNonFull(int value);
     void splitChild(int i, Node *node);
     void printInOrder();
