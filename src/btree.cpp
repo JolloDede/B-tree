@@ -18,21 +18,21 @@ void BTree::newValue(int value)
     }
     else
     {
-        if (rootNode->nV == degree - 1)
-        {
-            Node *newRootNode = new Node(degree, false);
-
-            newRootNode->children[0] = rootNode;
-
-            newRootNode->splitChild(0, rootNode, value);
-
-            rootNode = newRootNode;
-        }
-        else
-        {
-            rootNode->insertNonFull(value);
-        }
+        rootNode->insert(value);
     }
+}
+
+void BTree::search(int value){
+    if (rootNode->values[0] > value)
+    {
+        if (!rootNode->leaf)
+        {
+            rootNode->children[0] https://medium.com/@msanchez157/all-about-b-trees-7330962c1098
+        }
+        
+    }
+    
+    rootNode->values[0]
 }
 
 // Main function Where the tree gets printed to the commandline
