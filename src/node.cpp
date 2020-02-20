@@ -6,8 +6,8 @@ Node::Node(int deg, bool leaf)
     Node::leaf = leaf;
     Node::deg = deg;
 
-    values = new int[2*deg-1];
-    children = new Node *[2*deg];
+    values = new int[deg - 1];
+    children = new Node *[deg];
 
     nV = 0;
     std::cout << "New Node" << std::endl;
@@ -16,93 +16,96 @@ Node::Node(int deg, bool leaf)
 // Inserting in a node wich is not Full
 void Node::insertNonFull(int value)
 {
-    int i = nV - 1;
-    // If its a leaf insert the Value
     if (leaf)
     {
+        int i = nV - 1;
+
         while (i >= 0 && values[i] > value)
         {
             values[i + 1] = values[i];
             i--;
         }
+
         values[i + 1] = value;
+
         nV++;
     }
     else
     {
-        while (i >= 0 && values[i] > value)
+        int i = nV;
+
+        while (i > 0 && values[i - 1] > value)
         {
             i--;
         }
 
-        // If the Child is full Split it
-        if (children[i + 1]->nV == 2 * deg - 1)
+        if (children[i]->nV == deg - 1)
         {
-            splitChild(i + 1, children[i + 1]);
+            splitChild(1, children[i], value);
 
-            if (values[i + 1] < value)
-            {
-                i++;
-            }
+            return;
         }
-        children[i + 1]->insertNonFull(value);
+        children[i]->insertNonFull(value);
     }
 }
 
 // Splits the child of de current node and decides where the value goes
-void Node::splitChild(int i, Node *nodeLeft)
+void Node::splitChild(int i, Node *smallNode, int value)
 {
-    Node *nodeRight = new Node(deg, nodeLeft->leaf);
-    nodeRight->nV = deg - 1;
+    Node *bigNode = new Node(deg, smallNode->leaf);
 
-    for (int j = 0; j < deg - 1; j++)
-    {
-        nodeRight->values[j] = nodeLeft->values[j + deg];
-    }
+    bigNode->nV = 1;
 
-    if (!nodeLeft->leaf)
+    smallNode->nV = 1;
+
+    if (smallNode->values[0] < value)
     {
-        for (int j = 0; j < deg; j++)
+        if (smallNode->values[1] < value)
         {
-            nodeRight->children[j] = nodeLeft->children[j + deg];
+            if (smallNode->values[1] > values[0] && nV != 0)
+            {
+                values[1] = smallNode->values[1];
+            }
+            else
+            {
+                values[1] = values[0];
+                values[0] = smallNode->values[1];
+            }
+            bigNode->values[0] = value;
+        }
+        else
+        {
+            if (value > values[0] && nV != 0)
+            {
+                values[1] = value;
+            }
+            else
+            {
+                values[1] = values[0];
+                values[0] = value;
+            }
+            bigNode->values[0] = smallNode->values[1];
         }
     }
-
-    nodeLeft->nV = deg - 1;
-
-    for (int j = nV; j >= i + 1; j--)
+    else
     {
-        children[j + 1] = children[j];
+        if (smallNode->values[0] > values[0] && nV != 0)
+        {
+            values[1] = smallNode->values[0];
+        }
+        else
+        {
+            values[1] = values[0];
+            values[0] = smallNode->values[0];
+        }
+        smallNode->values[0] = value;
+        bigNode->values[0] = smallNode->values[1];
     }
-
-    children[i + 1] = nodeRight;
-
-    for (int j = nV - 1; j >= i; j--)
-    {
-        values[j + 1] = values[j];
-    }
-
-    values[i] = nodeLeft->values[deg - 1];
-
     nV++;
+    children[i + 1] = bigNode;
 }
 
 // The Nodes print itself with recursion starting at the rootNode
 void Node::printInOrder()
 {
-    int i;
-    for (i = 0; i < nV; i++)
-    {
-        if (!leaf)
-        {
-            children[i]->printInOrder();
-        }
-        std::cout << "nV: " << nV;
-        std::cout << " " << values[i] << std::endl;
-    }
-
-    if (!leaf)
-    {
-        children[i]->printInOrder();
-    }
 }

@@ -5,7 +5,7 @@ struct Node
 {
     int *values;
     int nV;
-    Node *parent;
+    // Node *parent;
     Node **children;
     bool leaf;
 
@@ -13,6 +13,6 @@ struct Node
 
     Node(int deg, bool leaf);
     void insertNonFull(int value);
-    void splitChild(int i, Node *node);
+    void splitChild(int i, Node *node, int value);
     void printInOrder();
 };

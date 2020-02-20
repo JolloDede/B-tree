@@ -15,8 +15,8 @@ int main(){
     tree.newValue(80);
     tree.newValue(29);
     tree.newValue(14);
-    tree.newValue(2);
-    tree.newValue(10);
+    // tree.newValue(2);
+    // tree.newValue(10);
     // The tree gets printed in Order
     tree.printTree();
 }
