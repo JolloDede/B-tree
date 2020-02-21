@@ -11,7 +11,8 @@ public:
     BTree(int _deg);
 
     void newValue(int value);
-    void search(int value);
+    bool search(int value);
     void printTree();
+    void printInOrder();
     void recTree(Node *node);
 };

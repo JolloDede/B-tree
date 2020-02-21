@@ -5,7 +5,7 @@ struct Node
 {
     int *values;
     int nV;
-    // Node *parent;
+    Node *parent;
     Node **children;
     bool leaf;
 
@@ -13,6 +13,7 @@ struct Node
 
     Node(int deg, bool leaf);
     void insert(int value);
-    void splitChild(int i, Node *node, int value);
+    Node* find(int value);
+    void splitChild(Node *node, int median, int cSplit);
     void printInOrder();
 };
