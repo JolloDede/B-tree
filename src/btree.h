@@ -5,7 +5,6 @@
 class BTree
 {
     Node *rootNode;
-    int degree;
 
 public:
     BTree(int _deg);

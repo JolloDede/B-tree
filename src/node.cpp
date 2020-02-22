@@ -16,109 +16,148 @@ Node::Node(int deg, bool leaf)
 // Inserting in a node wich is not Full
 void Node::insert(int value)
 {
-    Node *node = find(value);
-
-    if (node == NULL)
+    if (leaf)
     {
-        std::cout << "Error didnt find Node";
-    }
-    
-
-    int i = node->nV - 1;
-    while (i >= 0 && node->values[i] > value)
-    {
-        i--;
-    }
-    if (node->values[i] == value)
-    {
-        std::cout << "Error cant insert";
-        return;
-    }
-
-    if (node->nV == deg - 1)
-    {
-        i = node->nV - 1;
-        while (i >= 0 && node->values[i] > value)
+        if (nV == deg - 1)
         {
-            node->values[i + 1] = node->values[i];
-            i--;
-        }
-        node->values[i+1] = value;
-
-        if (node->parent != NULL)
-        {
-            node->parent->splitChild(node, 1, 1);
+            int i = nV - 1;
+            while (i >= 0 && values[i] > value)
+            {
+                values[i + 1] = values[i];
+                i--;
+            }
+            values[i + 1] = value;
+            int med = sizeof(values) / sizeof(*values);
+            if (parent == NULL)
+            {
+                Node *newRoot = new Node(deg, false);
+                newRoot->nV = 0;
+                newRoot->parent = NULL;
+                newRoot->children[0] = this;
+                parent = newRoot;
+            }
+            parent->splitChild(this, med);
         }
         else
         {
-            // New Rootnode
-            Node *newRootnode = new Node(deg, false);
-            newRootnode->parent = NULL;
-            newRootnode->nV = 0;
-
-            node->parent = newRootnode;
-            newRootnode->children[0] = node;
-            newRootnode->splitChild(node, 1, 0);
+            int i = nV - 1;
+            while (i >= 0 && values[i] > value)
+            {
+                values[i + 1] = values[i];
+                i--;
+            }
+            values[i + 1] = value;
+            nV++;
         }
     }
     else
     {
-        i = node->nV - 1;
-        while (i >= 0 && node->values[i] > value)
+        int i = nV - 1;
+        while (i >= 0 && values[i] > value)
         {
-            node->values[i + 1] = node->values[i];
             i--;
         }
-        node->values[i + 1] = value;
-        node->nV++;
+        children[i + 1]->insert(value);
     }
 }
 
 // Splits the child of de current node and decides where the value goes
-void Node::splitChild(Node *smallNode, int median, int cSplit)
+void Node::splitChild(Node *smallNode, int median)
 {
-    Node *bigNode = new Node(deg, smallNode->leaf);
-    bigNode->parent = this;
-
-    for (int i = nV; i >= cSplit+1; i--)
+    if (nV == deg - 1)
     {
-        children[i+1] = children[i];
-    }
-    children[cSplit+1] = bigNode;
+        int i = nV - 1;
+        while (i >= 0 && values[i] > smallNode->values[median])
+        {
+            values[i + 1] = values[i];
+            i--;
+        }
+        values[i + 1] = smallNode->values[median];
+        int med = sizeof(values) / sizeof(*values);
+        if (parent == NULL)
+        {
+            Node *newRoot = new Node(deg, false);
+            newRoot->nV = 0;
+            newRoot->parent = NULL;
+            newRoot->children[0] = this;
+            parent = newRoot;
+        }
+        parent->splitChild(this, med);
 
-    for (int i = median + 1; i < deg; i++)
+        Node *bigNode = new Node(deg, smallNode->leaf);
+        bigNode->nV = 0;
+        bigNode->parent = this;
+
+        for (i = 0; i < sizeof(children) / sizeof(*children); i++)
+        {
+            if (children[i] == smallNode)
+            {
+                break;
+            }
+        }
+        children[i + 1] = bigNode;
+
+
+        for (i = 0; i + median <= deg; i++)
+        {
+            bigNode->children[i] = smallNode->children[median + i];
+            smallNode->children[median + i] = NULL;
+        }
+
+        i = smallNode->nV;
+        while (i > median)
+        {
+            bigNode->values[bigNode->nV] = smallNode->values[i];
+            bigNode->nV++;
+            smallNode->nV--;
+            i--;
+        }
+    }
+    else
     {
-        bigNode->values[bigNode->nV] = smallNode->values[i];
-        bigNode->nV++;
-        smallNode->nV--;
-    }
+        Node *bigNode = new Node(deg, smallNode->leaf);
+        bigNode->nV = 0;
+        bigNode->parent = this;
 
+        int i;
+        for (i = 0; i < sizeof(children) / sizeof(*children); i++)
+        {
+            if (children[i] == smallNode)
+            {
+                break;
+            }
+        }
+        children[i + 1] = bigNode;
+
+        addValToNode(smallNode->values[median]);
+
+        // Childmigration
+        for (i = 0; i + median <= deg; i++)
+        {
+            bigNode->children[i] = smallNode->children[median + i];
+            smallNode->children[median + i] = NULL;
+        }
+
+        i = smallNode->nV;
+        while (i > median)
+        {
+            bigNode->values[bigNode->nV] = smallNode->values[i];
+            bigNode->nV++;
+            smallNode->nV--;
+            i--;
+        }
+    }
+}
+
+void Node::addValToNode(int value)
+{
     int i = nV - 1;
-    while (i >= 0 && values[i] > smallNode->values[median])
+    while (i >= 0 && values[i] > value)
     {
         values[i + 1] = values[i];
         i--;
     }
-    values[i + 1] = smallNode->values[median];
-    if (nV == deg - 1)
-    {
-        if (parent == NULL)
-        {
-            //New Rootnode
-            Node *newRootnode = new Node(deg, false);
-            newRootnode->parent = NULL;
-            newRootnode->nV = 0;
-
-            parent = newRootnode;
-            newRootnode->children[0] = this;
-            newRootnode->splitChild(this, 1, 0);
-            return;
-        }
-        else
-        {
-            parent->splitChild(this, 1, 1);
-        }
-    }
+    values[i + 1] = value;
     nV++;
 }
 
@@ -147,8 +186,7 @@ Node *Node::find(int value)
     {
         i--;
     }
-
-    if (values[i+1] == value)
+    if (values[i + 1] == value)
     {
         return this;
     }

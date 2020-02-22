@@ -20,4 +20,7 @@ int main(){
     // The tree gets printed in Order
     tree.printTree();
     tree.printInOrder();
+
+    cout << endl;
+    cout << "End";
 }

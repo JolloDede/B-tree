@@ -8,4 +8,4 @@ btree.o : src\btree.cpp src\btree.h
 	g++ -c src\btree.cpp -o bin\btree.o
 
 node.o : src\node.cpp src\node.h
-	g++  -c src\node.cpp -o bin\node.o
+	g++ -c src\node.cpp -o bin\node.o
