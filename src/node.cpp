@@ -132,10 +132,19 @@ void Node::splitChild(Node *smallNode, int median)
 
         addValToNode(smallNode->values[median]);
 
+        i = smallNode->nV;
+        while (i > median)
+        {
+            bigNode->values[bigNode->nV] = smallNode->values[i];
+            bigNode->nV++;
+            smallNode->nV--;
+            i--;
+        }
+
         // Childmigration
         if (!smallNode->leaf)
         {
-            for (i = 0; i + median <= deg; i++)
+            for (i = 0; i <= nV; i++)
             {
                 bigNode->children[i] = smallNode->children[median + i];
                 if (bigNode->children[i] == nullptr)
@@ -145,15 +154,6 @@ void Node::splitChild(Node *smallNode, int median)
                 bigNode->children[i]->parent = bigNode;
                 smallNode->children[median + i] = nullptr;
             }
-        }
-
-        i = smallNode->nV;
-        while (i > median)
-        {
-            bigNode->values[bigNode->nV] = smallNode->values[i];
-            bigNode->nV++;
-            smallNode->nV--;
-            i--;
         }
     }
 }
