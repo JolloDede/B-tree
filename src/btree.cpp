@@ -86,9 +86,17 @@ void BTree::printTree()
               << "Child 2 Child 2: ";
     std::cout << std::endl
               << rootNode->children[1]->children[1]->nV << std::endl;
-    for (int i = 0; i < rootNode->children[0]->children[1]->nV; i++)
+    for (int i = 0; i < rootNode->children[1]->children[1]->nV; i++)
     {
         std::cout << rootNode->children[1]->children[1]->values[i] << " ";
+    }
+    std::cout << std::endl
+              << "Child 2 Child 3: ";
+    std::cout << std::endl
+              << rootNode->children[1]->children[2]->nV << std::endl;
+    for (int i = 0; i < rootNode->children[1]->children[2]->nV; i++)
+    {
+        std::cout << rootNode->children[1]->children[2]->values[i] << " ";
     }
 
     std::cout << std::endl
