@@ -144,13 +144,9 @@ void Node::splitChild(Node *smallNode, int median)
         // Childmigration
         if (!smallNode->leaf)
         {
-            for (i = 0; i <= nV; i++)
+            for (i = 0; i <= sizeof(smallNode->children)/ sizeof(*smallNode->children); i++)
             {
                 bigNode->children[i] = smallNode->children[median + i];
-                if (bigNode->children[i] == nullptr)
-                {
-                    break;
-                }
                 bigNode->children[i]->parent = bigNode;
                 smallNode->children[median + i] = nullptr;
             }

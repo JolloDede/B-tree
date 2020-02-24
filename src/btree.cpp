@@ -90,14 +90,14 @@ void BTree::printTree()
     {
         std::cout << rootNode->children[1]->children[1]->values[i] << " ";
     }
-    std::cout << std::endl
-              << "Child 2 Child 3: ";
-    std::cout << std::endl
-              << rootNode->children[1]->children[2]->nV << std::endl;
-    for (int i = 0; i < rootNode->children[1]->children[2]->nV; i++)
-    {
-        std::cout << rootNode->children[1]->children[2]->values[i] << " ";
-    }
+    // std::cout << std::endl
+    //           << "Child 2 Child 3: ";
+    // std::cout << std::endl
+    //           << rootNode->children[1]->children[2]->nV << std::endl;
+    // for (int i = 0; i < rootNode->children[1]->children[2]->nV; i++)
+    // {
+    //     std::cout << rootNode->children[1]->children[2]->values[i] << " ";
+    // }
 
     std::cout << std::endl
               << "Rootchild 3: ";
@@ -106,6 +106,22 @@ void BTree::printTree()
     for (int i = 0; i < rootNode->children[2]->nV; i++)
     {
         std::cout << rootNode->children[2]->values[i] << " ";
+    }
+    std::cout << std::endl
+              << "Rootchild 3 Child 1: ";
+    std::cout << std::endl
+              << rootNode->children[2]->children[0]->nV << std::endl;
+    for (int i = 0; i < rootNode->children[2]->children[0]->nV; i++)
+    {
+        std::cout << rootNode->children[2]->children[0]->values[i] << " ";
+    }
+    std::cout << std::endl
+              << "Rootchild 3 Child 2: ";
+    std::cout << std::endl
+              << rootNode->children[2]->children[1]->nV << std::endl;
+    for (int i = 0; i < rootNode->children[2]->children[1]->nV; i++)
+    {
+        std::cout << rootNode->children[2]->children[1]->values[i] << " ";
     }
 }
 
