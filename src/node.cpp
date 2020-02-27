@@ -3,11 +3,12 @@
 // Constructor Init size of children and values
 Node::Node(int deg, bool leaf)
 {
+    std::cout << "n1";
     Node::leaf = leaf;
     Node::deg = deg;
-
+    std::cout << "n2";
     values = new int[deg - 1];
-    parent = NULL;
+    parent = nullptr;
     nV = 0;
     std::cout << "New Node" << std::endl;
 }
@@ -27,13 +28,17 @@ void Node::insert(int value)
             }
             values[i + 1] = value;
             int med = sizeof(values) / sizeof(*values);
-            if (parent == NULL)
+            std::cout << "a1";
+            if (parent == nullptr)
             {
+                std::cout << "ta1";
                 Node *newRoot = new Node(deg, false);
+                std::cout << "ta2";
                 newRoot->children.push_back(this);
 
                 parent = newRoot;
             }
+            std::cout << "a2";
             parent->splitChild(this, med);
         }
         else
@@ -62,8 +67,10 @@ void Node::insert(int value)
 // Splits the child of de current node and decides where the value goes
 void Node::splitChild(Node *smallNode, int median)
 {
+    std::cout << "s1";
     if (nV == deg - 1)
     {
+        std::cout << "ts1";
         int i = nV - 1;
         while (i >= 0 && values[i] > smallNode->values[median])
         {
@@ -72,7 +79,7 @@ void Node::splitChild(Node *smallNode, int median)
         }
         values[i + 1] = smallNode->values[median];
         int med = sizeof(values) / sizeof(*values);
-        if (parent == NULL)
+        if (parent == nullptr)
         {
             Node *newRoot = new Node(deg, false);
             newRoot->children.push_back(this);
@@ -120,7 +127,11 @@ void Node::splitChild(Node *smallNode, int median)
     }
     else
     {
+        std::cout << "fs1";
+        std::cout << smallNode->leaf;
+        std::cout << deg;
         Node *bigNode = new Node(deg, smallNode->leaf);
+        std::cout << "fs2";
         bigNode->parent = this;
 
         int i = 0;
