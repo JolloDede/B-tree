@@ -7,7 +7,7 @@ Node::Node(int deg, bool leaf)
     Node::deg = deg;
 
     values = new int[deg - 1];
-
+    parent = NULL;
     nV = 0;
     std::cout << "New Node" << std::endl;
 }
@@ -30,8 +30,6 @@ void Node::insert(int value)
             if (parent == NULL)
             {
                 Node *newRoot = new Node(deg, false);
-                newRoot->nV = 0;
-                newRoot->parent = NULL;
                 newRoot->children.push_back(this);
 
                 parent = newRoot;
@@ -77,14 +75,11 @@ void Node::splitChild(Node *smallNode, int median)
         if (parent == NULL)
         {
             Node *newRoot = new Node(deg, false);
-            newRoot->nV = 0;
-            newRoot->parent = NULL;
             newRoot->children.push_back(this);
 
             parent = newRoot;
         }
         Node *bigNode = new Node(deg, smallNode->leaf);
-        bigNode->nV = 0;
         bigNode->parent = this;
 
         for (i = 0; i < children.size(); i++)
@@ -126,10 +121,9 @@ void Node::splitChild(Node *smallNode, int median)
     else
     {
         Node *bigNode = new Node(deg, smallNode->leaf);
-        bigNode->nV = 0;
         bigNode->parent = this;
 
-        int i;
+        int i = 0;
         for (i = 0; i < children.size(); i++)
         {
             if (children[i] == smallNode)
