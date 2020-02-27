@@ -109,6 +109,18 @@ void Node::splitChild(Node *smallNode, int median)
             smallNode->nV--;
             i--;
         }
+
+        // Childmigration
+        if (!smallNode->leaf)
+        {
+            for (i = 0; i + median + 1 < smallNode->children.size(); i++)
+            {
+                bigNode->children.push_back(smallNode->children[median + i + 1]);
+                bigNode->children[i]->parent = bigNode;
+            }
+            smallNode->children.resize(smallNode->children.size() - i);
+        }
+
         parent->splitChild(this, med);
     }
     else
