@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include <stdlib.h>
 
 struct Node
@@ -6,7 +7,7 @@ struct Node
     int *values;
     int nV;
     Node *parent;
-    Node **children;
+    std::vector<Node*> children;
     bool leaf;
 
     int deg;

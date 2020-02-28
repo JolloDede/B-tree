@@ -3,12 +3,12 @@
 // Constructor Init size of children and values
 Node::Node(int deg, bool leaf)
 {
+    std::cout << "n1";
     Node::leaf = leaf;
     Node::deg = deg;
-
+    std::cout << "n2";
     values = new int[deg - 1];
-    children = new Node *[deg];
-
+    parent = nullptr;
     nV = 0;
     std::cout << "New Node" << std::endl;
 }
@@ -28,14 +28,17 @@ void Node::insert(int value)
             }
             values[i + 1] = value;
             int med = sizeof(values) / sizeof(*values);
-            if (parent == NULL)
+            std::cout << "a1";
+            if (parent == nullptr)
             {
+                std::cout << "ta1";
                 Node *newRoot = new Node(deg, false);
-                newRoot->nV = 0;
-                newRoot->parent = NULL;
-                newRoot->children[0] = this;
+                std::cout << "ta2";
+                newRoot->children.push_back(this);
+
                 parent = newRoot;
             }
+            std::cout << "a2";
             parent->splitChild(this, med);
         }
         else
@@ -64,8 +67,10 @@ void Node::insert(int value)
 // Splits the child of de current node and decides where the value goes
 void Node::splitChild(Node *smallNode, int median)
 {
+    std::cout << "s1";
     if (nV == deg - 1)
     {
+        std::cout << "ts1";
         int i = nV - 1;
         while (i >= 0 && values[i] > smallNode->values[median])
         {
@@ -74,30 +79,27 @@ void Node::splitChild(Node *smallNode, int median)
         }
         values[i + 1] = smallNode->values[median];
         int med = sizeof(values) / sizeof(*values);
-        if (parent == NULL)
+        if (parent == nullptr)
         {
             Node *newRoot = new Node(deg, false);
-            newRoot->nV = 0;
-            newRoot->parent = NULL;
-            newRoot->children[0] = this;
+            newRoot->children.push_back(this);
+
             parent = newRoot;
         }
-        parent->splitChild(this, med);
-
         Node *bigNode = new Node(deg, smallNode->leaf);
-        bigNode->nV = 0;
         bigNode->parent = this;
 
-        for (i = 0; i < sizeof(children) / sizeof(*children); i++)
+        for (i = 0; i < children.size(); i++)
         {
             if (children[i] == smallNode)
             {
                 break;
             }
         }
-        for (int j = nV; j >= i+1; j--)
+        children.resize(children.size() + 1);
+        for (int j = nV; j >= i + 1; j--)
         {
-            children[j+1] = children[j];
+            children[j + 1] = children[j];
         }
         children[i + 1] = bigNode;
 
@@ -109,24 +111,41 @@ void Node::splitChild(Node *smallNode, int median)
             smallNode->nV--;
             i--;
         }
+
+        // Childmigration
+        if (!smallNode->leaf)
+        {
+            for (i = 0; i + median + 1 < smallNode->children.size(); i++)
+            {
+                bigNode->children.push_back(smallNode->children[median + i + 1]);
+                bigNode->children[i]->parent = bigNode;
+            }
+            smallNode->children.resize(smallNode->children.size() - i);
+        }
+
+        parent->splitChild(this, med);
     }
     else
     {
+        std::cout << "fs1";
+        std::cout << smallNode->leaf;
+        std::cout << deg;
         Node *bigNode = new Node(deg, smallNode->leaf);
-        bigNode->nV = 0;
+        std::cout << "fs2";
         bigNode->parent = this;
 
-        int i;
-        for (i = 0; i < sizeof(children) / sizeof(*children); i++)
+        int i = 0;
+        for (i = 0; i < children.size(); i++)
         {
             if (children[i] == smallNode)
             {
                 break;
             }
         }
-        for (int j = nV; j >= i+1; j--)
+        children.resize(children.size() + 1);
+        for (int j = nV; j >= i + 1; j--)
         {
-            children[j+1] = children[j];
+            children[j + 1] = children[j];
         }
         children[i + 1] = bigNode;
 
@@ -144,16 +163,12 @@ void Node::splitChild(Node *smallNode, int median)
         // Childmigration
         if (!smallNode->leaf)
         {
-            for (i = 0; i <= nV; i++)
+            for (i = 0; i + median + 1 < smallNode->children.size(); i++)
             {
-                bigNode->children[i] = smallNode->children[median + i];
-                if (bigNode->children[i] == nullptr)
-                {
-                    break;
-                }
+                bigNode->children.push_back(smallNode->children[median + i + 1]);
                 bigNode->children[i]->parent = bigNode;
-                smallNode->children[median + i] = nullptr;
             }
+            smallNode->children.resize(smallNode->children.size() - i);
         }
     }
 }

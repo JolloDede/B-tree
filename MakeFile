@@ -1,5 +1,5 @@
 program : main.o btree.o node.o
-	g++ bin/main.o bin/btree.o bin/node.o -o bin/program
+	g++ -O0 bin/main.o bin/btree.o bin/node.o -o bin/program
 
 main.o : test\main.cpp src\btree.h
 	g++ -c test\main.cpp -o bin\main.o
