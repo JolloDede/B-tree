@@ -198,7 +198,7 @@ Node *Node::find(int value)
     {
         i--;
     }
-    if (values[i + 1] == value)
+    if (values[i] == value)
     {
         return this;
     }
@@ -211,4 +211,8 @@ Node *Node::find(int value)
         return this;
     }
     return NULL;
+}
+
+void Node::deleteValue(int value){
+    
 }

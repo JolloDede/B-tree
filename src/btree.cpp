@@ -31,6 +31,27 @@ bool BTree::search(int value)
     return false;
 }
 
+bool BTree::deleteValue(int value){
+    bool found;
+    Node* node = rootNode->find(value);
+
+    for (int i = 0; i < node->nV; i++)
+    {
+        if (value == node->values[i])
+        {
+            found = true;
+            break;
+        }
+    }
+    // if found delete and rearange
+    if (found)
+    {
+        node->delete
+    }
+    
+    return found;
+}
+
 // Main function Where the tree gets printed to the commandline
 void BTree::printTree()
 {

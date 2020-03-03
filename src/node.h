@@ -15,6 +15,7 @@ struct Node
     Node(int deg, bool leaf);
     void insert(int value);
     Node* find(int value);
+    void deleteValue(int value);
     void splitChild(Node *node, int median);
     void addValToNode(int val);
     void printInOrder();

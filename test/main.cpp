@@ -13,7 +13,8 @@ int main(){
     // The tree gets printed in Order
     // tree.printTree();
     tree.printInOrder();
-
+    cout << endl;
+    cout << tree.search(7);
     cout << endl;
     cout << "End";
 }

@@ -10,6 +10,7 @@ public:
     BTree(int _deg);
 
     void newValue(int value);
+    bool deleteValue(int value);
     bool search(int value);
     void printTree();
     void printInOrder();
