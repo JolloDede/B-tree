@@ -213,6 +213,58 @@ Node *Node::find(int value)
     return NULL;
 }
 
-void Node::deleteValue(int value){
+void Node::deleteValue(int value)
+{
+}
+
+void Node::deleteFromLeaf(Node *node)
+{
+    int x = parent->getChildIndex(this);
+    values[nV] = parent->values[x];
+    parent->children.erase(parent->children.begin() + x + 1);
+
+    while (x < parent->nV)
+    {
+        parent->values[x] = parent->values[x + 1];
+        x++;
+    }
+    nV++;
+    parent->nV--;
+
     
+}
+
+void Node::merge(Node *node)
+{
+    int x = parent->getChildIndex(this);
+    values[nV] = parent->values[x];
+    parent->children.erase(parent->children.begin() + x + 1);
+
+    while (x < parent->nV)
+    {
+        parent->values[x] = parent->values[x + 1];
+        x++;
+    }
+    nV++;
+    parent->nV--;
+
+    for (int i = 0; i < node->nV; i++)
+    {
+        values[nV] = node->values[i];
+        nV++;
+        node->nV--;
+    }
+
+    delete node;
+}
+
+int Node::getChildIndex(Node *node)
+{
+    for (int i = 0; i < children.size(); i++)
+    {
+        if (node == children[i])
+        {
+            return i;
+        }
+    }
 }

@@ -31,9 +31,10 @@ bool BTree::search(int value)
     return false;
 }
 
-bool BTree::deleteValue(int value){
+bool BTree::deleteValue(int value)
+{
     bool found;
-    Node* node = rootNode->find(value);
+    Node *node = rootNode->find(value);
 
     for (int i = 0; i < node->nV; i++)
     {
@@ -46,9 +47,76 @@ bool BTree::deleteValue(int value){
     // if found delete and rearange
     if (found)
     {
-        node->delete
+        if (node->leaf) // Case 2
+        {
+            if (node->nV > 1) // 1 only for deg 3
+            {
+                // Just delete the Value
+                int i;
+                for (i = 0; i < node->nV; i++)
+                {
+                    if (node->values[i] >= value)
+                    {
+                        node->values[i] = node->values[i + 1];
+                    }
+                }
+                node->nV--;
+            }
+            else
+            {
+                // Delete this value
+                int i;
+                for (i = 0; i < node->nV; i++)
+                {
+                    if (node->values[i] == value)
+                    {
+                        node->values[i] = NULL;
+                        node->nV--;
+                        break;
+                    }
+                }
+
+                Node *parent = node->parent;
+                int ii = parent->getChildIndex(node);
+                int yChildPos;
+                if (ii == parent->children.size() - 1)
+                {
+                    yChildPos = ii - 1;
+                }
+                else
+                {
+                    yChildPos = ii + 1;
+                }
+                Node *yChild = parent->children[yChildPos];
+
+                if (yChild->nV == 1/* only for deg 3 */)// Case 2a
+                {
+                    
+                    /* code */
+                }
+                else // Case 2b
+                {
+                    if (ii < yChildPos)
+                    {
+                        node->merge(yChild);
+                    }
+                    else
+                    {
+                        yChild->merge(node);
+                    }
+                }
+                                
+            }
+        }
+        else // Case 3
+        {
+            /* code */
+        }
+        
+
+        // node->deleteValue(value);
     }
-    
+
     return found;
 }
 

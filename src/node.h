@@ -16,6 +16,9 @@ struct Node
     void insert(int value);
     Node* find(int value);
     void deleteValue(int value);
+    void merge(Node* node);
+    void deleteFromLeaf(Node* node);
+    int getChildIndex(Node* node);
     void splitChild(Node *node, int median);
     void addValToNode(int val);
     void printInOrder();
