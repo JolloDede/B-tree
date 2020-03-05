@@ -11,12 +11,18 @@ int main(){
     BTree tree(3);
     testInsertion(&tree);
     // The tree gets printed in Order
-    // tree.printTree();
+    tree.printTree();
     tree.printInOrder();
     cout << endl;
+    cout << "Search:" << endl;
     cout << tree.search(7);
     cout << endl;
-    cout << "End";
+    cout << "Delete value:" << endl;
+    cout << tree.deleteValue(81);
+    cout << endl;
+    tree.printTree();
+    tree.printInOrder();
+    cout << endl << "End";
 }
 
 void testInsertion(BTree *tree){
@@ -39,4 +45,5 @@ void testInsertion(BTree *tree){
     tree->newValue(81);
     tree->newValue(33);
     tree->newValue(45);
+    tree->newValue(110);
 }

@@ -4,7 +4,8 @@
 
 struct Node
 {
-    int *values;
+    // int *values;
+    std::vector<int> values;
     int nV;
     Node *parent;
     std::vector<Node*> children;
@@ -17,7 +18,7 @@ struct Node
     Node* find(int value);
     void deleteValue(int value);
     void merge(Node* node);
-    void deleteFromLeaf(Node* node);
+    void deleteFromLeaf(Node* node, bool bigger);
     int getChildIndex(Node* node);
     void splitChild(Node *node, int median);
     void addValToNode(int val);

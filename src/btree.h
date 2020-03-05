@@ -13,6 +13,7 @@ public:
     bool deleteValue(int value);
     bool search(int value);
     void printTree();
+    void rec(Node* node, int dept);
     void printInOrder();
     void recTree(Node *node);
 };

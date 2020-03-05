@@ -5,7 +5,7 @@ Node::Node(int deg, bool leaf)
 {
     Node::leaf = leaf;
     Node::deg = deg;
-    values = new int[deg - 1];
+    values.resize(deg-1);
     parent = nullptr;
     nV = 0;
     std::cout << "New Node" << std::endl;
@@ -25,7 +25,7 @@ void Node::insert(int value)
                 i--;
             }
             values[i + 1] = value;
-            int med = sizeof(values) / sizeof(*values);
+            int med = values.size()/2;
             if (parent == nullptr)
             {
                 Node *newRoot = new Node(deg, false);
@@ -70,7 +70,7 @@ void Node::splitChild(Node *smallNode, int median)
             i--;
         }
         values[i + 1] = smallNode->values[median];
-        int med = sizeof(values) / sizeof(*values);
+        int med = values.size()/2;
         if (parent == nullptr)
         {
             Node *newRoot = new Node(deg, false);
@@ -187,7 +187,10 @@ void Node::printInOrder()
     }
     if (!leaf)
     {
-        children[i]->printInOrder();
+        if (i < children.size())
+        {
+            children[i]->printInOrder();
+        }
     }
 }
 
@@ -217,23 +220,29 @@ void Node::deleteValue(int value)
 {
 }
 
-void Node::deleteFromLeaf(Node *node)
+// 2a
+void Node::deleteFromLeaf(Node *_node, bool bigger_node)
 {
     int x = parent->getChildIndex(this);
     values[nV] = parent->values[x];
-    parent->children.erase(parent->children.begin() + x + 1);
-
-    while (x < parent->nV)
-    {
-        parent->values[x] = parent->values[x + 1];
-        x++;
-    }
     nV++;
-    parent->nV--;
 
-    
+    if (bigger_node)
+    {
+        parent->values[x] = _node->values[0];
+        for (int i = 0; i < _node->nV; i++)
+        {
+            _node->values[i] = _node->values[i+1];
+        }
+    }else
+    {
+        parent->values[x] = _node->values[_node->nV-1];
+    }
+
+    _node->nV--;
 }
 
+// 2b
 void Node::merge(Node *node)
 {
     int x = parent->getChildIndex(this);
@@ -267,4 +276,6 @@ int Node::getChildIndex(Node *node)
             return i;
         }
     }
+    std::cout << std::endl << "Error cant find child" << std::endl;
+    return -1;
 }

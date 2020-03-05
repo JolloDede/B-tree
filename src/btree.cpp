@@ -70,18 +70,23 @@ bool BTree::deleteValue(int value)
                 {
                     if (node->values[i] == value)
                     {
-                        node->values[i] = NULL;
-                        node->nV--;
                         break;
                     }
                 }
+                for (int ii = i; ii < node->nV; ii++)
+                {
+                    node->values[ii] = node->values[ii + 1];
+                }
+                node->nV--;
 
                 Node *parent = node->parent;
                 int ii = parent->getChildIndex(node);
                 int yChildPos;
                 if (ii == parent->children.size() - 1)
                 {
-                    yChildPos = ii - 1;
+                    parent->children.resize(parent->children.size()-1);
+                    delete node;
+                    return true;
                 }
                 else
                 {
@@ -89,10 +94,9 @@ bool BTree::deleteValue(int value)
                 }
                 Node *yChild = parent->children[yChildPos];
 
-                if (yChild->nV == 1/* only for deg 3 */)// Case 2a
+                if (yChild->nV >= 1 /* only for deg 3 */) // Case 2a
                 {
-                    
-                    /* code */
+                    node->deleteFromLeaf(yChild, (ii > yChildPos) ? false : true);
                 }
                 else // Case 2b
                 {
@@ -105,115 +109,140 @@ bool BTree::deleteValue(int value)
                         yChild->merge(node);
                     }
                 }
-                                
             }
         }
         else // Case 3
         {
-            /* code */
+            std::cout << std::endl
+                      << "Error not yet implemented" << std::endl;
         }
-        
-
-        // node->deleteValue(value);
     }
 
     return found;
 }
 
+void BTree::rec(Node *node, int dept)
+{
+    if (node == rootNode)
+    {
+        std::cout << std::endl
+                  << "Rootnode: " << std::endl;
+    }else
+    {
+        std::cout << std::endl
+                  << "Node dept = " << dept << ": " << std::endl;
+    }
+    if (node->leaf)
+    {
+        std::cout << "leaf" << std::endl;
+    }
+    std::cout << node->nV << std::endl;
+    for (int i = 0; i < node->nV; i++)
+    {
+        std::cout << node->values[i] << " ";
+    }
+    std::cout << std::endl;
+    for (size_t i = 0; i < node->children.size(); i++)
+    {
+        dept++;
+        rec(node->children[i], dept);
+        dept--;
+    }
+}
+
 // Main function Where the tree gets printed to the commandline
 void BTree::printTree()
 {
-    std::cout << std::endl
-              << "Rootnode: " << std::endl;
-    std::cout << rootNode->nV << std::endl;
-    for (int i = 0; i < rootNode->nV; i++)
-    {
-        std::cout << rootNode->values[i] << " ";
-    }
-    std::cout << std::endl
-              << "Rootchild 1: ";
-    std::cout << std::endl
-              << rootNode->children[0]->nV << std::endl;
-    for (int i = 0; i < rootNode->children[0]->nV; i++)
-    {
-        std::cout << rootNode->children[0]->values[i] << " ";
-    }
-    std::cout << std::endl
-              << "Child 1 Child 1: ";
-    std::cout << std::endl
-              << rootNode->children[0]->children[0]->nV << std::endl;
-    for (int i = 0; i < rootNode->children[0]->children[0]->nV; i++)
-    {
-        std::cout << rootNode->children[0]->children[0]->values[i] << " ";
-    }
-    std::cout << std::endl
-              << "Child 1 Child 2: ";
-    std::cout << std::endl
-              << rootNode->children[0]->children[1]->nV << std::endl;
-    for (int i = 0; i < rootNode->children[0]->children[1]->nV; i++)
-    {
-        std::cout << rootNode->children[0]->children[1]->values[i] << " ";
-    }
-
-    std::cout << std::endl
-              << "Rootchild 2: ";
-    std::cout << std::endl
-              << rootNode->children[1]->nV << std::endl;
-    for (int i = 0; i < rootNode->children[1]->nV; i++)
-    {
-        std::cout << rootNode->children[1]->values[i] << " ";
-    }
-    std::cout << std::endl
-              << "Child 2 Child 1: ";
-    std::cout << std::endl
-              << rootNode->children[1]->children[0]->nV << std::endl;
-    for (int i = 0; i < rootNode->children[1]->children[0]->nV; i++)
-    {
-        std::cout << rootNode->children[1]->children[0]->values[i] << " ";
-    }
-    std::cout << rootNode->children[1]->children[0]->children.size();
-    std::cout << std::endl
-              << "Child 2 Child 2: ";
-    std::cout << std::endl
-              << rootNode->children[1]->children[1]->nV << std::endl;
-    for (int i = 0; i < rootNode->children[1]->children[1]->nV; i++)
-    {
-        std::cout << rootNode->children[1]->children[1]->values[i] << " ";
-    }
-    std::cout << rootNode->children[1]->children[1]->children.size();
+    rec(rootNode, 0);
     // std::cout << std::endl
-    //           << "Child 2 Child 3: ";
-    // std::cout << std::endl
-    //           << rootNode->children[1]->children[2]->nV << std::endl;
-    // for (int i = 0; i < rootNode->children[1]->children[2]->nV; i++)
+    //           << "Rootnode: " << std::endl;
+    // std::cout << rootNode->nV << std::endl;
+    // for (int i = 0; i < rootNode->nV; i++)
     // {
-    //     std::cout << rootNode->children[1]->children[2]->values[i] << " ";
+    //     std::cout << rootNode->values[i] << " ";
+    // }
+    // std::cout << std::endl
+    //           << "Rootchild 1: ";
+    // std::cout << std::endl
+    //           << rootNode->children[0]->nV << std::endl;
+    // for (int i = 0; i < rootNode->children[0]->nV; i++)
+    // {
+    //     std::cout << rootNode->children[0]->values[i] << " ";
+    // }
+    // std::cout << std::endl
+    //           << "Child 1 Child 1: ";
+    // std::cout << std::endl
+    //           << rootNode->children[0]->children[0]->nV << std::endl;
+    // for (int i = 0; i < rootNode->children[0]->children[0]->nV; i++)
+    // {
+    //     std::cout << rootNode->children[0]->children[0]->values[i] << " ";
+    // }
+    // std::cout << std::endl
+    //           << "Child 1 Child 2: ";
+    // std::cout << std::endl
+    //           << rootNode->children[0]->children[1]->nV << std::endl;
+    // for (int i = 0; i < rootNode->children[0]->children[1]->nV; i++)
+    // {
+    //     std::cout << rootNode->children[0]->children[1]->values[i] << " ";
     // }
 
     // std::cout << std::endl
-    //           << "Rootchild 3: ";
+    //           << "Rootchild 2: ";
     // std::cout << std::endl
-    //           << rootNode->children[2]->nV << std::endl;
-    // for (int i = 0; i < rootNode->children[2]->nV; i++)
+    //           << rootNode->children[1]->nV << std::endl;
+    // for (int i = 0; i < rootNode->children[1]->nV; i++)
     // {
-    //     std::cout << rootNode->children[2]->values[i] << " ";
+    //     std::cout << rootNode->children[1]->values[i] << " ";
     // }
     // std::cout << std::endl
-    //           << "Rootchild 3 Child 1: ";
+    //           << "Child 2 Child 1: ";
     // std::cout << std::endl
-    //           << rootNode->children[2]->children[0]->nV << std::endl;
-    // for (int i = 0; i < rootNode->children[2]->children[0]->nV; i++)
+    //           << rootNode->children[1]->children[0]->nV << std::endl;
+    // for (int i = 0; i < rootNode->children[1]->children[0]->nV; i++)
     // {
-    //     std::cout << rootNode->children[2]->children[0]->values[i] << " ";
+    //     std::cout << rootNode->children[1]->children[0]->values[i] << " ";
     // }
     // std::cout << std::endl
-    //           << "Rootchild 3 Child 2: ";
+    //           << "Child 2 Child 2: ";
     // std::cout << std::endl
-    //           << rootNode->children[2]->children[1]->nV << std::endl;
-    // for (int i = 0; i < rootNode->children[2]->children[1]->nV; i++)
+    //           << rootNode->children[1]->children[1]->nV << std::endl;
+    // for (int i = 0; i < rootNode->children[1]->children[1]->nV; i++)
     // {
-    //     std::cout << rootNode->children[2]->children[1]->values[i] << " ";
+    //     std::cout << rootNode->children[1]->children[1]->values[i] << " ";
     // }
+    // // std::cout << std::endl
+    // //           << "Child 2 Child 3: ";
+    // // std::cout << std::endl
+    // //           << rootNode->children[1]->children[2]->nV << std::endl;
+    // // for (int i = 0; i < rootNode->children[1]->children[2]->nV; i++)
+    // // {
+    // //     std::cout << rootNode->children[1]->children[2]->values[i] << " ";
+    // // }
+
+    // // std::cout << std::endl
+    // //           << "Rootchild 3: ";
+    // // std::cout << std::endl
+    // //           << rootNode->children[2]->nV << std::endl;
+    // // for (int i = 0; i < rootNode->children[2]->nV; i++)
+    // // {
+    // //     std::cout << rootNode->children[2]->values[i] << " ";
+    // // }
+    // // std::cout << std::endl
+    // //           << "Rootchild 3 Child 1: ";
+    // // std::cout << std::endl
+    // //           << rootNode->children[2]->children[0]->nV << std::endl;
+    // // for (int i = 0; i < rootNode->children[2]->children[0]->nV; i++)
+    // // {
+    // //     std::cout << rootNode->children[2]->children[0]->values[i] << " ";
+    // // }
+    // // std::cout << std::endl
+    // //           << "Rootchild 3 Child 2: ";
+    // // std::cout << std::endl
+    // //           << rootNode->children[2]->children[1]->nV << std::endl;
+    // // for (int i = 0; i < rootNode->children[2]->children[1]->nV; i++)
+    // // {
+    // //     std::cout << rootNode->children[2]->children[1]->values[i] << " ";
+    // // }
 }
 
 void BTree::printInOrder()
