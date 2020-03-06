@@ -18,7 +18,7 @@ int main(){
     cout << tree.search(7);
     cout << endl;
     cout << "Delete value:" << endl;
-    cout << tree.deleteValue(81);
+    cout << tree.deleteValue(90);
     cout << endl;
     tree.printTree();
     tree.printInOrder();
@@ -44,6 +44,6 @@ void testInsertion(BTree *tree){
     tree->newValue(90);
     tree->newValue(81);
     tree->newValue(33);
-    tree->newValue(45);
-    tree->newValue(110);
+    // tree->newValue(45);
+    // tree->newValue(110);
 }

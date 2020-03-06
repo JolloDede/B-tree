@@ -5,7 +5,7 @@ Node::Node(int deg, bool leaf)
 {
     Node::leaf = leaf;
     Node::deg = deg;
-    values.resize(deg-1);
+    values.resize(deg - 1);
     parent = nullptr;
     nV = 0;
     std::cout << "New Node" << std::endl;
@@ -25,7 +25,7 @@ void Node::insert(int value)
                 i--;
             }
             values[i + 1] = value;
-            int med = values.size()/2;
+            int med = values.size() / 2;
             if (parent == nullptr)
             {
                 Node *newRoot = new Node(deg, false);
@@ -70,7 +70,7 @@ void Node::splitChild(Node *smallNode, int median)
             i--;
         }
         values[i + 1] = smallNode->values[median];
-        int med = values.size()/2;
+        int med = values.size() / 2;
         if (parent == nullptr)
         {
             Node *newRoot = new Node(deg, false);
@@ -218,6 +218,7 @@ Node *Node::find(int value)
 
 void Node::deleteValue(int value)
 {
+
 }
 
 // 2a
@@ -232,14 +233,30 @@ void Node::deleteFromLeaf(Node *_node, bool bigger_node)
         parent->values[x] = _node->values[0];
         for (int i = 0; i < _node->nV; i++)
         {
-            _node->values[i] = _node->values[i+1];
+            _node->values[i] = _node->values[i + 1];
         }
-    }else
+    }
+    else
     {
-        parent->values[x] = _node->values[_node->nV-1];
+        parent->values[x] = _node->values[_node->nV - 1];
     }
 
     _node->nV--;
+
+    if (_node->nV == 0)
+    {
+        if (bigger_node)
+        {
+            parent->children.erase(parent->children.begin()+x+1);
+        }
+        else
+        {
+            parent->children.erase(parent->children.begin()+x-1);
+        }
+        
+        delete _node;
+    }
+    
 }
 
 // 2b
@@ -276,6 +293,7 @@ int Node::getChildIndex(Node *node)
             return i;
         }
     }
-    std::cout << std::endl << "Error cant find child" << std::endl;
+    std::cout << std::endl
+              << "Error cant find child" << std::endl;
     return -1;
 }

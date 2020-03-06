@@ -36,9 +36,10 @@ bool BTree::deleteValue(int value)
     bool found;
     Node *node = rootNode->find(value);
 
-    for (int i = 0; i < node->nV; i++)
+    int v;
+    for (v = 0; v < node->nV; v++)
     {
-        if (value == node->values[i])
+        if (value == node->values[v])
         {
             found = true;
             break;
@@ -84,7 +85,7 @@ bool BTree::deleteValue(int value)
                 int yChildPos;
                 if (ii == parent->children.size() - 1)
                 {
-                    parent->children.resize(parent->children.size()-1);
+                    parent->children.resize(parent->children.size() - 1);
                     delete node;
                     return true;
                 }
@@ -115,9 +116,56 @@ bool BTree::deleteValue(int value)
         {
             std::cout << std::endl
                       << "Error not yet implemented" << std::endl;
+            Node *yChild = node->children[v];
+
+            // Case 3a
+            if (yChild->nV > 1)
+            {
+                node->values[v] = yChild->values.back();
+                yChild->nV--;
+                // delet recursiv
+            }
+            if (yChild->nV == 1)
+            {
+                Node *zChild = node->children[v + 1];
+                if (zChild == NULL)
+                {
+                    node->nV--;
+                    return true;
+                }
+
+                // Case 3b
+                if (zChild->nV > 1)
+                {
+                    node->values[v] = zChild->values.front();
+
+                    for (int i = 0; i < zChild->nV; i++)
+                    {
+                        zChild->values[i] = zChild->values[i + 1];
+                    }
+                }
+                else // Case 3c
+                {
+                    for (int i = 0; i < zChild->nV; i++)
+                    {
+                        yChild->values[yChild->nV] = zChild->values[i];
+                        yChild->nV++;
+                    }
+
+                    for (int i = v; i < node->nV; i++)
+                    {
+                        node->values[i] = node->values[i + 1];
+                    }
+                    node->nV--;
+
+                    node->children.erase(node->children.begin() + v + 1);
+
+                    delete zChild;
+                    // delete recursiv
+                }
+            }
         }
     }
-
     return found;
 }
 
@@ -127,7 +175,8 @@ void BTree::rec(Node *node, int dept)
     {
         std::cout << std::endl
                   << "Rootnode: " << std::endl;
-    }else
+    }
+    else
     {
         std::cout << std::endl
                   << "Node dept = " << dept << ": " << std::endl;
