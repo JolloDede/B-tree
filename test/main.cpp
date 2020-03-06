@@ -15,10 +15,10 @@ int main(){
     tree.printInOrder();
     cout << endl;
     cout << "Search:" << endl;
-    cout << tree.search(7);
+    cout << tree.search(99);
     cout << endl;
     cout << "Delete value:" << endl;
-    cout << tree.deleteValue(90);
+    cout << tree.deleteValue(33);
     cout << endl;
     tree.printTree();
     tree.printInOrder();

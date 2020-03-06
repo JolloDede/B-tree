@@ -209,16 +209,76 @@ Node *Node::find(int value)
     {
         return children[i + 1]->find(value);
     }
-    if (leaf)
-    {
-        return this;
-    }
     return NULL;
 }
 
 void Node::deleteValue(int value)
 {
+    int v;
+    for (v = 0; v < nV; v++)
+    {
+        if (value == values[v])
+        {
+            break;
+        }
+    }
+    if (leaf) // Case 1 and 2
+    {
+        if (nV > 1) // Case 1 only deg 3
+        {
+            for (int i = 0; i < nV; i++)
+            {
+                if (values[i] >= value)
+                {
+                    values[i] = values[i + 1];
+                }
+            }
+            nV--;
+        }
+        else // Case 2
+        {
+            for (int i = 0; i < nV; i++)
+            {
+                if (values[i] >= value)
+                {
+                    values[i] = values[i + 1];
+                }
+            }
+            nV--;
+            int index = parent->getChildIndex(this);
+            int yChildPos;
 
+            if (index == parent->children.size() - 1)
+            {
+                yChildPos = index - 1;
+            }
+            else
+            {
+                yChildPos = index + 1;
+            }
+
+            Node *yChild = parent->children[yChildPos];
+            if (yChild->nV > 1) // Case 2a
+            {
+                deleteFromLeaf(yChild, (index > yChildPos) ? false : true);
+            }
+            else
+            {
+                if (index < yChildPos)
+                {
+                    merge(yChild);
+                }
+                else
+                {
+                    yChild->merge(this);
+                }
+            }
+        }
+    }
+    else // Case 3
+    {
+        std::cout << "Error not yet implemented";
+    }
 }
 
 // 2a
@@ -247,16 +307,15 @@ void Node::deleteFromLeaf(Node *_node, bool bigger_node)
     {
         if (bigger_node)
         {
-            parent->children.erase(parent->children.begin()+x+1);
+            parent->children.erase(parent->children.begin() + x + 1);
         }
         else
         {
-            parent->children.erase(parent->children.begin()+x-1);
+            parent->children.erase(parent->children.begin() + x - 1);
         }
-        
+
         delete _node;
     }
-    
 }
 
 // 2b

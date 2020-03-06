@@ -21,14 +21,8 @@ void BTree::newValue(int value)
 bool BTree::search(int value)
 {
     Node *node = rootNode->find(value);
-    for (int i = 0; i < node->nV; i++)
-    {
-        if (node->values[i] == value)
-        {
-            return true;
-        }
-    }
-    return false;
+
+    return (node != nullptr)? true : false;
 }
 
 bool BTree::deleteValue(int value)
@@ -36,6 +30,9 @@ bool BTree::deleteValue(int value)
     bool found;
     Node *node = rootNode->find(value);
 
+    // trying to do it recursivly
+    node->deleteValue(value);
+    return true;
     int v;
     for (v = 0; v < node->nV; v++)
     {
@@ -114,8 +111,8 @@ bool BTree::deleteValue(int value)
         }
         else // Case 3
         {
-            std::cout << std::endl
-                      << "Error not yet implemented" << std::endl;
+            // std::cout << std::endl
+            //           << "Error not yet implemented" << std::endl;
             Node *yChild = node->children[v];
 
             // Case 3a
