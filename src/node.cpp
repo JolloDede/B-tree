@@ -224,7 +224,7 @@ void Node::deleteValue(int value)
     }
     if (leaf) // Case 1 and 2
     {
-        if (nV > 1) // Case 1 only deg 3
+        if (nV >= 2) // Case 1: n >= t
         {
             for (int i = 0; i < nV; i++)
             {
@@ -235,7 +235,7 @@ void Node::deleteValue(int value)
             }
             nV--;
         }
-        else // Case 2
+        else // Case 2: n == (t-1)
         {
             for (int i = 0; i < nV; i++)
             {
@@ -258,11 +258,12 @@ void Node::deleteValue(int value)
             }
 
             Node *yChild = parent->children[yChildPos];
-            if (yChild->nV > 1) // Case 2a
+
+            if (yChild->nV > 1) // Case 2a: y.n >= t
             {
                 deleteFromLeaf(yChild, (index > yChildPos) ? false : true);
             }
-            else
+            else // Case 2b: y.n == t-1
             {
                 if (index < yChildPos)
                 {
@@ -278,6 +279,56 @@ void Node::deleteValue(int value)
     else // Case 3
     {
         std::cout << "Error not yet implemented";
+        Node *yChild = children[v];
+
+        if (yChild->nV >= 2) // Case 3a: y.n >= t
+        {
+            values[v] = yChild->values[yChild->nV - 1];
+            yChild->deleteValue(yChild->values[yChild->nV - 1]);
+        }
+        if (yChild->nV < 2) // Case 3b and 3c: y.n < t
+        {
+            Node *zChild = children[v + 1];
+
+            if (zChild == nullptr)
+            {
+                std::cout << "Error Case 3b";
+                return;
+            }
+
+            if (zChild->nV >= 2) // Case 3b: z.n >= t
+            {
+                values[v] = zChild->values[0];
+                for (int i = 0; i < zChild->nV; i++)
+                {
+                    zChild->values[i] = zChild->values[i + 1];
+                }
+                zChild->nV--;
+            }
+            if (zChild->nV == 1) // Case 3c: y.n == (t-1) AND z.n == (t-1)
+            {
+                yChild->values[yChild->nV] = values[v];
+                yChild->nV++;
+
+                for (int i = v; i < nV; i++)
+                {
+                    values[i] = values[i+1];
+                }                
+
+                for (int i = 0; i < zChild->nV; i++)
+                {
+                    yChild->values[yChild->nV] = zChild->values[i];
+                    yChild->nV++;
+                }
+
+                children.erase(children.begin() + v + 1);
+
+                delete zChild;
+
+                yChild->deleteValue(value);
+                nV--;
+            }
+        }
     }
 }
 

@@ -92,11 +92,11 @@ bool BTree::deleteValue(int value)
                 }
                 Node *yChild = parent->children[yChildPos];
 
-                if (yChild->nV >= 1 /* only for deg 3 */) // Case 2a
+                if (yChild->nV >= 1 /* only for deg 3 */) // Case 2a: n >= t
                 {
                     node->deleteFromLeaf(yChild, (ii > yChildPos) ? false : true);
                 }
-                else // Case 2b
+                else // Case 2b: n == t-1
                 {
                     if (ii < yChildPos)
                     {
