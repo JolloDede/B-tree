@@ -18,7 +18,7 @@ int main(){
     // cout << tree.search(81);
     // cout << endl;
     cout << "Delete value:" << endl;
-    cout << tree.deleteValue(29);
+    cout << tree.deleteValue(10);
     cout << endl;
     tree.printTree();
     tree.printInOrder();

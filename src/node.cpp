@@ -362,6 +362,10 @@ Node* Node::getRightMostNode(){
 void Node::deleteFromLeaf(Node *_node, bool bigger_node)
 {
     int x = parent->getChildIndex(this);
+    if (x == parent->nV)
+    {
+        x--;
+    }
     values[nV] = parent->values[x];
     nV++;
 
