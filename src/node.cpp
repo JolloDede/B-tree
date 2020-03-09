@@ -281,54 +281,80 @@ void Node::deleteValue(int value)
         std::cout << "Error not yet implemented";
         Node *yChild = children[v];
 
-        if (yChild->nV >= 2) // Case 3a: y.n >= t
+        Node* rNode = yChild->getRightMostNode();
+
+        values[v] = rNode->values[rNode->nV-1];
+
+        if (rNode->nV >= 2)
         {
-            values[v] = yChild->values[yChild->nV - 1];
-            yChild->deleteValue(yChild->values[yChild->nV - 1]);
+            return;
         }
-        if (yChild->nV < 2) // Case 3b and 3c: y.n < t
+        else
         {
-            Node *zChild = children[v + 1];
-
-            if (zChild == nullptr)
-            {
-                std::cout << "Error Case 3b";
-                return;
-            }
-
-            if (zChild->nV >= 2) // Case 3b: z.n >= t
-            {
-                values[v] = zChild->values[0];
-                for (int i = 0; i < zChild->nV; i++)
-                {
-                    zChild->values[i] = zChild->values[i + 1];
-                }
-                zChild->nV--;
-            }
-            if (zChild->nV == 1) // Case 3c: y.n == (t-1) AND z.n == (t-1)
-            {
-                yChild->values[yChild->nV] = values[v];
-                yChild->nV++;
-
-                for (int i = v; i < nV; i++)
-                {
-                    values[i] = values[i+1];
-                }                
-
-                for (int i = 0; i < zChild->nV; i++)
-                {
-                    yChild->values[yChild->nV] = zChild->values[i];
-                    yChild->nV++;
-                }
-
-                children.erase(children.begin() + v + 1);
-
-                delete zChild;
-
-                yChild->deleteValue(value);
-                nV--;
-            }
+            rNode->deleteValue(values[v]);
         }
+        
+        // if (yChild->nV >= 2) // Case 3a: y.n >= t
+        // {
+        //     values[v] = yChild->values[yChild->nV - 1];
+        //     yChild->deleteValue(yChild->values[yChild->nV - 1]);
+        //     return;
+        // }
+        // if (yChild->nV < 2) // Case 3b and 3c: y.n < t
+        // {
+        //     Node *zChild = children[v + 1];
+
+        //     if (zChild == nullptr)
+        //     {
+        //         std::cout << "Error Case 3b";
+        //         return;
+        //     }
+
+        //     if (zChild->nV >= 2) // Case 3b: z.n >= t
+        //     {
+        //         values[v] = zChild->values[0];
+        //         for (int i = 0; i < zChild->nV; i++)
+        //         {
+        //             zChild->values[i] = zChild->values[i + 1];
+        //         }
+        //         zChild->nV--;
+        //         return;
+        //     }
+        //     if (zChild->nV == 1) // Case 3c: y.n == (t-1) AND z.n == (t-1)
+        //     {
+        //         yChild->values[yChild->nV] = values[v];
+        //         yChild->nV++;
+
+        //         for (int i = v; i < nV; i++)
+        //         {
+        //             values[i] = values[i+1];
+        //         }                
+
+        //         for (int i = 0; i < zChild->nV; i++)
+        //         {
+        //             yChild->values[yChild->nV] = zChild->values[i];
+        //             yChild->nV++;
+        //         }
+
+        //         children.erase(children.begin() + v + 1);
+
+        //         delete zChild;
+
+        //         yChild->deleteValue(value);
+        //         nV--;
+            // }
+        // }
+    }
+}
+
+Node* Node::getRightMostNode(){
+    if (leaf)
+    {
+        return this;
+    }
+    else
+    {
+        return children[children.size()-1]->getRightMostNode();
     }
 }
 

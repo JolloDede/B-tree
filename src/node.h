@@ -20,6 +20,7 @@ struct Node
     void merge(Node* node);
     void deleteFromLeaf(Node* node, bool bigger);
     int getChildIndex(Node* node);
+    Node* getRightMostNode();
     void splitChild(Node *node, int median);
     void addValToNode(int val);
     void printInOrder();

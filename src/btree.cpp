@@ -27,14 +27,9 @@ bool BTree::search(int value)
 
 bool BTree::deleteValue(int value)
 {
-    bool found;
+    bool found = false;
     Node *node = rootNode->find(value);
-
-    // trying to do it recursivly
-    node->deleteValue(value);
-    return true;
-    int v;
-    for (v = 0; v < node->nV; v++)
+    for (int v = 0; v < node->nV; v++)
     {
         if (value == node->values[v])
         {
@@ -42,128 +37,139 @@ bool BTree::deleteValue(int value)
             break;
         }
     }
-    // if found delete and rearange
-    if (found)
+    // trying to do it recursivly
+    if (!found)
     {
-        if (node->leaf) // Case 2
-        {
-            if (node->nV > 1) // 1 only for deg 3
-            {
-                // Just delete the Value
-                int i;
-                for (i = 0; i < node->nV; i++)
-                {
-                    if (node->values[i] >= value)
-                    {
-                        node->values[i] = node->values[i + 1];
-                    }
-                }
-                node->nV--;
-            }
-            else
-            {
-                // Delete this value
-                int i;
-                for (i = 0; i < node->nV; i++)
-                {
-                    if (node->values[i] == value)
-                    {
-                        break;
-                    }
-                }
-                for (int ii = i; ii < node->nV; ii++)
-                {
-                    node->values[ii] = node->values[ii + 1];
-                }
-                node->nV--;
-
-                Node *parent = node->parent;
-                int ii = parent->getChildIndex(node);
-                int yChildPos;
-                if (ii == parent->children.size() - 1)
-                {
-                    parent->children.resize(parent->children.size() - 1);
-                    delete node;
-                    return true;
-                }
-                else
-                {
-                    yChildPos = ii + 1;
-                }
-                Node *yChild = parent->children[yChildPos];
-
-                if (yChild->nV >= 1 /* only for deg 3 */) // Case 2a: n >= t
-                {
-                    node->deleteFromLeaf(yChild, (ii > yChildPos) ? false : true);
-                }
-                else // Case 2b: n == t-1
-                {
-                    if (ii < yChildPos)
-                    {
-                        node->merge(yChild);
-                    }
-                    else
-                    {
-                        yChild->merge(node);
-                    }
-                }
-            }
-        }
-        else // Case 3
-        {
-            // std::cout << std::endl
-            //           << "Error not yet implemented" << std::endl;
-            Node *yChild = node->children[v];
-
-            // Case 3a
-            if (yChild->nV > 1)
-            {
-                node->values[v] = yChild->values.back();
-                yChild->nV--;
-                // delet recursiv
-            }
-            if (yChild->nV == 1)
-            {
-                Node *zChild = node->children[v + 1];
-                if (zChild == NULL)
-                {
-                    node->nV--;
-                    return true;
-                }
-
-                // Case 3b
-                if (zChild->nV > 1)
-                {
-                    node->values[v] = zChild->values.front();
-
-                    for (int i = 0; i < zChild->nV; i++)
-                    {
-                        zChild->values[i] = zChild->values[i + 1];
-                    }
-                }
-                else // Case 3c
-                {
-                    for (int i = 0; i < zChild->nV; i++)
-                    {
-                        yChild->values[yChild->nV] = zChild->values[i];
-                        yChild->nV++;
-                    }
-
-                    for (int i = v; i < node->nV; i++)
-                    {
-                        node->values[i] = node->values[i + 1];
-                    }
-                    node->nV--;
-
-                    node->children.erase(node->children.begin() + v + 1);
-
-                    delete zChild;
-                    // delete recursiv
-                }
-            }
-        }
+        return found;
     }
-    return found;
+    else
+    {
+        node->deleteValue(value);
+        return found;
+    }
+
+    // // if found delete and rearange
+    // if (found)
+    // {
+    //     if (node->leaf) // Case 2
+    //     {
+    //         if (node->nV > 1) // 1 only for deg 3
+    //         {
+    //             // Just delete the Value
+    //             int i;
+    //             for (i = 0; i < node->nV; i++)
+    //             {
+    //                 if (node->values[i] >= value)
+    //                 {
+    //                     node->values[i] = node->values[i + 1];
+    //                 }
+    //             }
+    //             node->nV--;
+    //         }
+    //         else
+    //         {
+    //             // Delete this value
+    //             int i;
+    //             for (i = 0; i < node->nV; i++)
+    //             {
+    //                 if (node->values[i] == value)
+    //                 {
+    //                     break;
+    //                 }
+    //             }
+    //             for (int ii = i; ii < node->nV; ii++)
+    //             {
+    //                 node->values[ii] = node->values[ii + 1];
+    //             }
+    //             node->nV--;
+
+    //             Node *parent = node->parent;
+    //             int ii = parent->getChildIndex(node);
+    //             int yChildPos;
+    //             if (ii == parent->children.size() - 1)
+    //             {
+    //                 parent->children.resize(parent->children.size() - 1);
+    //                 delete node;
+    //                 return true;
+    //             }
+    //             else
+    //             {
+    //                 yChildPos = ii + 1;
+    //             }
+    //             Node *yChild = parent->children[yChildPos];
+
+    //             if (yChild->nV >= 1 /* only for deg 3 */) // Case 2a: n >= t
+    //             {
+    //                 node->deleteFromLeaf(yChild, (ii > yChildPos) ? false : true);
+    //             }
+    //             else // Case 2b: n == t-1
+    //             {
+    //                 if (ii < yChildPos)
+    //                 {
+    //                     node->merge(yChild);
+    //                 }
+    //                 else
+    //                 {
+    //                     yChild->merge(node);
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     else // Case 3
+    //     {
+    //         // std::cout << std::endl
+    //         //           << "Error not yet implemented" << std::endl;
+    //         Node *yChild = node->children[v];
+
+    //         // Case 3a
+    //         if (yChild->nV > 1)
+    //         {
+    //             node->values[v] = yChild->values.back();
+    //             yChild->nV--;
+    //             // delet recursiv
+    //         }
+    //         if (yChild->nV == 1)
+    //         {
+    //             Node *zChild = node->children[v + 1];
+    //             if (zChild == NULL)
+    //             {
+    //                 node->nV--;
+    //                 return true;
+    //             }
+
+    //             // Case 3b
+    //             if (zChild->nV > 1)
+    //             {
+    //                 node->values[v] = zChild->values.front();
+
+    //                 for (int i = 0; i < zChild->nV; i++)
+    //                 {
+    //                     zChild->values[i] = zChild->values[i + 1];
+    //                 }
+    //             }
+    //             else // Case 3c
+    //             {
+    //                 for (int i = 0; i < zChild->nV; i++)
+    //                 {
+    //                     yChild->values[yChild->nV] = zChild->values[i];
+    //                     yChild->nV++;
+    //                 }
+
+    //                 for (int i = v; i < node->nV; i++)
+    //                 {
+    //                     node->values[i] = node->values[i + 1];
+    //                 }
+    //                 node->nV--;
+
+    //                 node->children.erase(node->children.begin() + v + 1);
+
+    //                 delete zChild;
+    //                 // delete recursiv
+    //             }
+    //         }
+    //     }
+    // }
+    // return found;
 }
 
 void BTree::rec(Node *node, int dept)
