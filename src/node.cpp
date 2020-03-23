@@ -18,33 +18,18 @@ void Node::insert(int value)
     {
         if (nV == deg - 1)
         {
-            int i = nV - 1;
-            while (i >= 0 && values[i] > value)
-            {
-                values[i + 1] = values[i];
-                i--;
-            }
-            values[i + 1] = value;
-            int med = values.size() / 2;
+            int i;
+            overFillNode(value);
+            int med = floor (values.size() / 2);
             if (parent == nullptr)
             {
-                Node *newRoot = new Node(deg, false);
-                newRoot->children.push_back(this);
-
-                parent = newRoot;
+                createNewRoot();
             }
             parent->splitChild(this, med);
         }
         else
         {
-            int i = nV - 1;
-            while (i >= 0 && values[i] > value)
-            {
-                values[i + 1] = values[i];
-                i--;
-            }
-            values[i + 1] = value;
-            nV++;
+            addValToNode(value);
         }
     }
     else
@@ -63,31 +48,18 @@ void Node::splitChild(Node *smallNode, int median)
 {
     if (nV == deg - 1)
     {
-        int i = nV - 1;
-        while (i >= 0 && values[i] > smallNode->values[median])
-        {
-            values[i + 1] = values[i];
-            i--;
-        }
-        values[i + 1] = smallNode->values[median];
-        int med = values.size() / 2;
+        int i;
+        overFillNode(smallNode->values[median]);
+        int med = floor (values.size() / 2);
         if (parent == nullptr)
         {
-            Node *newRoot = new Node(deg, false);
-            newRoot->children.push_back(this);
-
-            parent = newRoot;
+            createNewRoot();
         }
         Node *bigNode = new Node(deg, smallNode->leaf);
         bigNode->parent = this;
 
-        for (i = 0; i < children.size(); i++)
-        {
-            if (children[i] == smallNode)
-            {
-                break;
-            }
-        }
+        i = getChildIndex(smallNode);
+
         children.resize(children.size() + 1);
         for (int j = nV; j >= i + 1; j--)
         {
@@ -122,14 +94,8 @@ void Node::splitChild(Node *smallNode, int median)
         Node *bigNode = new Node(deg, smallNode->leaf);
         bigNode->parent = this;
 
-        int i = 0;
-        for (i = 0; i < children.size(); i++)
-        {
-            if (children[i] == smallNode)
-            {
-                break;
-            }
-        }
+        int i = getChildIndex(smallNode);
+        
         children.resize(children.size() + 1);
         for (int j = nV; j >= i + 1; j--)
         {
@@ -278,7 +244,7 @@ void Node::deleteValue(int value)
     }
     else // Case 3
     {
-        std::cout << "Error not yet implemented";
+        // std::cout << "Error not yet implemented";
         Node *yChild = children[v];
 
         Node* rNode = yChild->getRightMostNode();
@@ -293,57 +259,6 @@ void Node::deleteValue(int value)
         {
             rNode->deleteValue(values[v]);
         }
-        
-        // if (yChild->nV >= 2) // Case 3a: y.n >= t
-        // {
-        //     values[v] = yChild->values[yChild->nV - 1];
-        //     yChild->deleteValue(yChild->values[yChild->nV - 1]);
-        //     return;
-        // }
-        // if (yChild->nV < 2) // Case 3b and 3c: y.n < t
-        // {
-        //     Node *zChild = children[v + 1];
-
-        //     if (zChild == nullptr)
-        //     {
-        //         std::cout << "Error Case 3b";
-        //         return;
-        //     }
-
-        //     if (zChild->nV >= 2) // Case 3b: z.n >= t
-        //     {
-        //         values[v] = zChild->values[0];
-        //         for (int i = 0; i < zChild->nV; i++)
-        //         {
-        //             zChild->values[i] = zChild->values[i + 1];
-        //         }
-        //         zChild->nV--;
-        //         return;
-        //     }
-        //     if (zChild->nV == 1) // Case 3c: y.n == (t-1) AND z.n == (t-1)
-        //     {
-        //         yChild->values[yChild->nV] = values[v];
-        //         yChild->nV++;
-
-        //         for (int i = v; i < nV; i++)
-        //         {
-        //             values[i] = values[i+1];
-        //         }                
-
-        //         for (int i = 0; i < zChild->nV; i++)
-        //         {
-        //             yChild->values[yChild->nV] = zChild->values[i];
-        //             yChild->nV++;
-        //         }
-
-        //         children.erase(children.begin() + v + 1);
-
-        //         delete zChild;
-
-        //         yChild->deleteValue(value);
-        //         nV--;
-            // }
-        // }
     }
 }
 
@@ -436,4 +351,21 @@ int Node::getChildIndex(Node *node)
     std::cout << std::endl
               << "Error cant find child" << std::endl;
     return -1;
+}
+
+void Node::overFillNode(int value){
+        int i = nV - 1;
+        while (i >= 0 && values[i] > value)
+        {
+            values[i + 1] = values[i];
+            i--;
+        }
+        values[i + 1] = value;
+}
+
+void Node::createNewRoot(){
+    Node *newRoot = new Node(deg, false);
+    newRoot->children.push_back(this);
+
+    parent = newRoot;
 }

@@ -44,6 +44,6 @@ void testInsertion(BTree *tree){
     tree->newValue(90);
     tree->newValue(81);
     tree->newValue(33);
-    // tree->newValue(45);
-    // tree->newValue(110);
+    tree->newValue(45);
+    tree->newValue(110);
 }

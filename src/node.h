@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <stdlib.h>
+#include <math.h> 
 
 struct Node
 {
@@ -10,7 +11,6 @@ struct Node
     Node *parent;
     std::vector<Node*> children;
     bool leaf;
-
     int deg;
 
     Node(int deg, bool leaf);
@@ -23,5 +23,8 @@ struct Node
     Node* getRightMostNode();
     void splitChild(Node *node, int median);
     void addValToNode(int val);
+    void overFillNode(int value);
+    void createNewRoot();
+    
     void printInOrder();
 };
